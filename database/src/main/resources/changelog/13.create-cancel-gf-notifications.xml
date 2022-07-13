@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="13.create-cancel-gf-notifications.xml">
+
+  <changeSet id="create-cancel-gf-notifications" author="defra">
+    <comment>Create Cancel Grandfathered Registration notifications</comment>
+    <sql>
+      INSERT INTO
+        notify.notification_template (event, template_id)
+      VALUES
+        ('CANCEL_GRANDFATHERED_LEAD_NOTIFICATION', '43126a6e-9a8c-4bb7-813d-e0cdf6d317fa'),
+        ('CANCEL_GRANDFATHERED_LE_NOTIFICATION', 'f3b66a19-5363-41df-87e7-4fe462f3cd4a'),
+        ('CANCEL_GRANDFATHERED_BY_REGULATOR_LE_NOTIFICATION', '20f2311d-06d4-4953-9d63-f76efc0c7a27');
+    </sql>
+    <rollback>
+      DELETE FROM
+        notify.notification_template
+      WHERE
+        event IN
+          ('CANCEL_GRANDFATHERED_LEAD_NOTIFICATION',
+           'CANCEL_GRANDFATHERED_LE_NOTIFICATION',
+           'CANCEL_GRANDFATHERED_BY_REGULATOR_LE_NOTIFICATION')
+        AND template_id IN
+          ('43126a6e-9a8c-4bb7-813d-e0cdf6d317fa',
+           'f3b66a19-5363-41df-87e7-4fe462f3cd4a',
+           '20f2311d-06d4-4953-9d63-f76efc0c7a27');
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

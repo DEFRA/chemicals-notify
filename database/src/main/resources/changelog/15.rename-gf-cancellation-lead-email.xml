@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="15.rename-gf-cancellation-lead-email.xml">
+
+  <changeSet id="create-regulator-cancel-submission-notifications" author="defra">
+    <comment>Update GF cancellation lead email</comment>
+    <sql>
+      UPDATE notify.notification_template SET event = 'CANCEL_SUBMISSION_LEAD_NOTIFICATION'
+      WHERE template_id = '43126a6e-9a8c-4bb7-813d-e0cdf6d317fa';
+    </sql>
+    <rollback>
+      UPDATE notify.notification_template SET event = 'CANCEL_GRANDFATHERED_LEAD_NOTIFICATION'
+      WHERE template_id = '43126a6e-9a8c-4bb7-813d-e0cdf6d317fa';
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

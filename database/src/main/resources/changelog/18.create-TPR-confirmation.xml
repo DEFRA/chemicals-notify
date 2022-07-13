@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="18.create-TPR-confirmation.xml">
+
+    <changeSet id="create-PPORD-confirmation" author="defra">
+        <comment>Create PPORD_CONFIRMATION notification</comment>
+        <sql>
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('ADD_TPR_CONFIRMATION', '165d9cfb-8bc4-447f-95c2-03c0b3c485d4');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('NOTIFY_LE_ADD_AS_TPR', '9b07b6fa-8d61-4ade-8346-ae0863fa4730');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REMOVE_TPR_CONFIRMATION', '9cd3b3ea-23c1-4f26-b2fc-bf58ebb33f9b');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('NOTIFY_LE_REMOVE_AS_TPR', '8e6d0889-0ec8-45e2-9455-e46b6329bf19');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('CHANGE_TPR_CONFIRMATION', 'eea72386-0cd9-4874-bd4d-344070e50e57');
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_template WHERE event = 'ADD_TPR_CONFIRMATION' AND template_id = '165d9cfb-8bc4-447f-95c2-03c0b3c485d4';
+            DELETE FROM notify.notification_template WHERE event = 'NOTIFY_LE_ADD_AS_TPR' AND template_id = '9b07b6fa-8d61-4ade-8346-ae0863fa4730';
+            DELETE FROM notify.notification_template WHERE event = 'REMOVE_TPR_CONFIRMATION' AND template_id = '9cd3b3ea-23c1-4f26-b2fc-bf58ebb33f9b';
+            DELETE FROM notify.notification_template WHERE event = 'NOTIFY_LE_REMOVE_AS_TPR' AND template_id = '8e6d0889-0ec8-45e2-9455-e46b6329bf19';
+            DELETE FROM notify.notification_template WHERE event = 'CHANGE_TPR_CONFIRMATION' AND template_id = 'eea72386-0cd9-4874-bd4d-344070e50e57';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

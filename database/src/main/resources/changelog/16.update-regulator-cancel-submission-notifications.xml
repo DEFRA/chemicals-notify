@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="16.update-regulator-cancel-submission-notifications.xml">
+
+    <changeSet id="update-regulator-cancel-submission-notifications" author="defra">
+        <comment>Update CANCEL_SUBMISSION_BY_REGULATOR_LE_NOTIFICATION notification</comment>
+        <sql>
+            UPDATE notify.notification_template SET template_id = '78111cc6-08f3-4b0a-8bca-154de02bb842' WHERE event = 'CANCEL_SUBMISSION_BY_REGULATOR_LE_NOTIFICATION';
+        </sql>
+        <rollback>
+            UPDATE notify.notification_template SET template_id = '39cc7d8b-ba15-42a7-a3dc-a19be69dd2a1' WHERE event = 'CANCEL_SUBMISSION_BY_REGULATOR_LE_NOTIFICATION';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

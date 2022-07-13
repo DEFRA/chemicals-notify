@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="06.update-nip-nots-upload-confirmation.xml">
+
+    <changeSet id="update-upload-notification" author="defra">
+        <comment>Update NIP_NOTS_UPLOAD_CONFIRMATION notification</comment>
+        <sql>
+            UPDATE notify.notification_template SET template_id = 'a35cf614-5d0c-4283-aba3-0b526e826424'
+            WHERE event = 'NIP_NOTS_UPLOAD_CONFIRMATION'
+        </sql>
+        <rollback>
+            UPDATE notify.notification_template SET template_id = '708e596c-e2a6-4397-98b4-82eb72d900e6'
+            WHERE event = 'NIP_NOTS_UPLOAD_CONFIRMATION'
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

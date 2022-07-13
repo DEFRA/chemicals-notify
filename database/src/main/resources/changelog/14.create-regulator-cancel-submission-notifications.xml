@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="14.create-regulator-cancel-submission-notifications.xml">
+
+  <changeSet id="create-regulator-cancel-submission-notifications" author="defra">
+    <comment>Create regulator cancel submission notifications</comment>
+    <sql>
+      INSERT INTO notify.notification_template (event, template_id) VALUES
+      ('CANCEL_SUBMISSION_BY_REGULATOR_LE_NOTIFICATION', '39cc7d8b-ba15-42a7-a3dc-a19be69dd2a1')
+    </sql>
+    <rollback>
+      DELETE FROM notify.notification_template WHERE event IN ('CANCEL_SUBMISSION_BY_REGULATOR_LE_NOTIFICATION')
+      AND template_id IN ('39cc7d8b-ba15-42a7-a3dc-a19be69dd2a1')
+    </rollback>
+  </changeSet>
+
+</databaseChangeLog>

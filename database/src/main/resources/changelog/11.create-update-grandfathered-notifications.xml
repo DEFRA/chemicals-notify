@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="11.create-update-grandfathered-notifications.xml">
+
+    <changeSet id="create-update-grandfathered-notifications" author="defra">
+        <comment>Create UPDATE_GRANDFATHERED notifications</comment>
+        <sql>
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('UPDATE_GRANDFATHERED_CONFIRMATION', '49fa300c-b06b-4a37-9195-2addb2157f4f'),
+            ('GRANDFATHERED_COMPLETION_CONFIRMATION', '00767f6c-7cb8-4e28-9f16-91608b77f1c2'),
+            ('CHARGEABLE-GRANDFATHERED-REVIEWED','16ab08e3-8870-4955-83fc-86c82c3ab0c2'),
+            ('GRANDFATHERED-NO-INVOICE-REQUIRED', '53d06f45-bf06-4b3d-a3f7-65508e267fa8');
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_template WHERE event IN ('UPDATE_GRANDFATHERED_CONFIRMATION', 'GRANDFATHERED_COMPLETION_CONFIRMATION', 'CHARGEABLE-GRANDFATHERED-REVIEWED', 'GRANDFATHERED-NO-INVOICE-REQUIRED')
+            AND template_id IN ('49fa300c-b06b-4a37-9195-2addb2157f4f', '00767f6c-7cb8-4e28-9f16-91608b77f1c2', '16ab08e3-8870-4955-83fc-86c82c3ab0c2', '53d06f45-bf06-4b3d-a3f7-65508e267fa8');
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="04.create-new-reassign-lead-notifications.xml">
+
+    <changeSet id="reassign-lead-notification-updates" author="defra">
+        <comment>Create GRANDFATHERED_NOTIFICATION notification</comment>
+        <sql>
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('LEAD_REASSIGNED_NEW_LEAD_NOTIFICATION', 'b113d805-db1a-4bc6-a58a-7e7ca97794d6');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('LEAD_REASSIGNED_PREVIOUS_LEAD_NOTIFICATION', '39c754e5-1752-4480-b15c-cd48818df171');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('LEAD_REASSIGNED_GROUP_NOTIFICATION', 'e9f1e7d2-2881-4d6a-8fb8-968e503dfab4');
+            DELETE FROM notify.notification_template WHERE event = 'ACCEPT_REASSIGN_LEAD_GROUP_NOTIFICATION';
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_template WHERE event = 'LEAD_REASSIGNED_NEW_LEAD_NOTIFICATION';
+            DELETE FROM notify.notification_template WHERE event = 'LEAD_REASSIGNED_PREVIOUS_LEAD_NOTIFICATION';
+            DELETE FROM notify.notification_template WHERE event = 'LEAD_REASSIGNED_GROUP_NOTIFICATION';
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('ACCEPT_REASSIGN_LEAD_GROUP_NOTIFICATION', 'c9a07cd1-1f13-4b3f-845b-099f5067325d');
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="01.create-version-schema.xml">
+
+    <changeSet id="create-notification-states-table" author="defra">
+        <comment>Create NOTIFICATION_STATES table</comment>
+        <sql>
+            CREATE TABLE notify.notification_states
+            (
+            state                    VARCHAR(48)         NOT NULL,
+            description              VARCHAR(256),
+            CONSTRAINT pk_notification_states PRIMARY KEY(state)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_states;
+        </rollback>
+    </changeSet>
+    <changeSet id="insert_notification_state_data" author="defra">
+        <comment>Insert data into NOTIFICATION_STATES table</comment>
+        <sql>
+            INSERT INTO notify.notification_states (state, description) VALUES ('pending', 'Sent to GOV Notify');
+            INSERT INTO notify.notification_states (state, description) VALUES ('created', 'Notify has placed the message in a queue, ready to be sent to the provider');
+            INSERT INTO notify.notification_states (state, description) VALUES ('sending', 'Notify has sent the message to the provider');
+            INSERT INTO notify.notification_states (state, description) VALUES ('delivered', 'The message was successfully delivered');
+            INSERT INTO notify.notification_states (state, description) VALUES ('permanent-failure', 'The provider could not deliver the message because the email address was wrong');
+            INSERT INTO notify.notification_states (state, description) VALUES ('temporary-failure', 'The provider could not deliver the message after trying for 72 hours');
+            INSERT INTO notify.notification_states (state, description) VALUES ('technical-failure', 'Your message was not sent because there was a problem between Notify and the provider');
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_states WHERE state = 'pending';
+            DELETE FROM notify.notification_states WHERE state = 'created';
+            DELETE FROM notify.notification_states WHERE state = 'sending';
+            DELETE FROM notify.notification_states WHERE state = 'delivered';
+            DELETE FROM notify.notification_states WHERE state = 'permanent-failure';
+            DELETE FROM notify.notification_states WHERE state = 'temporary-failure';
+            DELETE FROM notify.notification_states WHERE state = 'technical-failure';
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-template-table" author="defra">
+        <comment>Create NOTIFICATION_TEMPLATE table</comment>
+        <sql>
+            CREATE TABLE notify.notification_template
+            (
+            event               VARCHAR(64)         NOT NULL,
+            template_id         UNIQUEIDENTIFIER    NOT NULL,
+            CONSTRAINT pk_event_template PRIMARY KEY(event)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_template;
+        </rollback>
+    </changeSet>
+    <changeSet id="insert_notification_template_data" author="defra">
+        <comment>Insert data into NOTIFICATION_TEMPLATE table</comment>
+        <sql>
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('NEW_REACH_MESSAGE', '9fb66220-1ab0-4bc7-a961-706d41c06ee1');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('INQUIRY_CC_PASS', 'b7aea9d7-93b1-4f83-86d9-0ea77b3c09da');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('CLAIM_LEAD_NOTIFICATION', 'c05f8024-2a8a-4a73-9f35-2968ff34846d');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('MEMBER_APPROVED_INDIVIDUAL_NOTIFICATION', '14a9cb2d-7e3a-4ff1-abe6-75f638ae7175');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('MEMBER_APPROVED_GROUP_NOTIFICATION', 'e0f5361f-3e93-4980-b1ca-ca056606f8fc');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('LEAD_REGULATOR_APPROVED_MEMBER_NOTIFICATION', '8ee543b4-66d1-493e-b167-602872e885b2');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('GF_TWO_YEAR_COMPLIANCE_NOTIFICATION', '498e2582-4ffa-41db-b0fe-1f84c4b6e718');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REGULATOR_LEAD_REMOVE_LEAD_NOTIFICATION', '515a39ab-22b4-4b14-b2f4-339ac8d2f4a6');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REGULATOR_LEAD_REMOVE_MEMBER_NOTIFICATION', '4d93f2b3-44bd-4bc3-bafb-7a4f4af0e232');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REGULATOR_LEAD_REMOVE_BLOCK_NOTIFICATION', '4b878bed-fa13-424a-b002-5f4494888cfa');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REGULATOR_UNBLOCK_LE_NOTIFICATION', '21501c3e-eaf7-4ea1-8e62-7dd8ed4fc3b8');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REQUEST_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION', '21070086-7699-49a7-bbe2-2acc3d24c54f');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REQUEST_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION', '852ac293-fb1a-447f-ae16-9c2217d4597e');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REJECT_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION', 'e1958df9-74fb-42db-8bd6-dae39fc86d55');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('REJECT_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION', 'c9c08c3b-2307-444c-b4b4-8f1ed379afc9');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('ACCEPT_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION', '88f568e1-97d6-4ee9-81bf-2a213580d128');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('ACCEPT_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION', 'c9a07cd1-1f13-4b3f-845b-099f5067325d');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('ACCEPT_REASSIGN_LEAD_GROUP_NOTIFICATION', 'c9a07cd1-1f13-4b3f-845b-099f5067325d');
+
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('MOVED_LE_NOTIFICATION', 'b4feb5d0-b8e2-4893-ac03-e76574cfee10');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('MOVED_LE_OLD_GROUP_NOTIFICATION', 'eee7e5e9-4d3a-4363-a998-97d409b91878');
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('MOVED_LE_NEW_GROUP_NOTIFICATION', '720ce803-da86-40ad-be7f-34cf0ea15d24');
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_template WHERE event = 'NEW_REACH_MESSAGE' AND template_id = '9fb66220-1ab0-4bc7-a961-706d41c06ee1';
+            DELETE FROM notify.notification_template WHERE event = 'INQUIRY_CC_PASS' AND template_id = 'b7aea9d7-93b1-4f83-86d9-0ea77b3c09da';
+            DELETE FROM notify.notification_template WHERE event = 'CLAIM_LEAD_NOTIFICATION' AND template_id = 'c05f8024-2a8a-4a73-9f35-2968ff34846d';
+            DELETE FROM notify.notification_template WHERE event = 'MEMBER_APPROVED_INDIVIDUAL_NOTIFICATION' AND template_id = '14a9cb2d-7e3a-4ff1-abe6-75f638ae7175';
+            DELETE FROM notify.notification_template WHERE event = 'MEMBER_APPROVED_GROUP_NOTIFICATION' AND template_id = 'e0f5361f-3e93-4980-b1ca-ca056606f8fc';
+            DELETE FROM notify.notification_template WHERE event = 'LEAD_REGULATOR_APPROVED_MEMBER_NOTIFICATION' AND template_id = '8ee543b4-66d1-493e-b167-602872e885b2';
+            DELETE FROM notify.notification_template WHERE event = 'GF_TWO_YEAR_COMPLIANCE_NOTIFICATION' AND template_id = '498e2582-4ffa-41db-b0fe-1f84c4b6e718';
+            DELETE FROM notify.notification_template WHERE event = 'REGULATOR_LEAD_REMOVE_LEAD_NOTIFICATION' AND template_id = '515a39ab-22b4-4b14-b2f4-339ac8d2f4a6';
+            DELETE FROM notify.notification_template WHERE event = 'REGULATOR_LEAD_REMOVE_MEMBER_NOTIFICATION' AND template_id = '4d93f2b3-44bd-4bc3-bafb-7a4f4af0e232';
+            DELETE FROM notify.notification_template WHERE event = 'REGULATOR_LEAD_REMOVE_BLOCK_NOTIFICATION' AND template_id = '4b878bed-fa13-424a-b002-5f4494888cfa';
+            DELETE FROM notify.notification_template WHERE event = 'REGULATOR_UNBLOCK_LE_NOTIFICATION' AND template_id = '21501c3e-eaf7-4ea1-8e62-7dd8ed4fc3b8';
+            DELETE FROM notify.notification_template WHERE event = 'REQUEST_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION' AND template_id = '21070086-7699-49a7-bbe2-2acc3d24c54f';
+            DELETE FROM notify.notification_template WHERE event = 'REQUEST_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION' AND template_id = '852ac293-fb1a-447f-ae16-9c2217d4597e';
+            DELETE FROM notify.notification_template WHERE event = 'REJECT_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION' AND template_id = 'e1958df9-74fb-42db-8bd6-dae39fc86d55';
+            DELETE FROM notify.notification_template WHERE event = 'REJECT_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION' AND template_id = 'c9c08c3b-2307-444c-b4b4-8f1ed379afc9';
+            DELETE FROM notify.notification_template WHERE event = 'ACCEPT_REASSIGN_LEAD_ORIGINAL_LEAD_NOTIFICATION' AND template_id = '88f568e1-97d6-4ee9-81bf-2a213580d128';
+            DELETE FROM notify.notification_template WHERE event = 'ACCEPT_REASSIGN_LEAD_PROSPECTIVE_LEAD_NOTIFICATION' AND template_id = 'c9a07cd1-1f13-4b3f-845b-099f5067325d';
+            DELETE FROM notify.notification_template WHERE event = 'ACCEPT_REASSIGN_LEAD_GROUP_LEAD_NOTIFICATION' AND template_id = 'c9a07cd1-1f13-4b3f-845b-099f5067325d';
+
+            DELETE FROM notify.notification_template WHERE event = 'MOVED_LE_NOTIFICATION' AND template_id = 'b4feb5d0-b8e2-4893-ac03-e76574cfee10';
+            DELETE FROM notify.notification_template WHERE event = 'MOVED_LE_OLD_GROUP_NOTIFICATION' AND template_id = 'eee7e5e9-4d3a-4363-a998-97d409b91878';
+            DELETE FROM notify.notification_template WHERE event = 'MOVED_LE_NEW_GROUP_NOTIFICATION' AND template_id = '720ce803-da86-40ad-be7f-34cf0ea15d24';
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-table" author="defra">
+        <comment>Create NOTIFICATION table</comment>
+        <sql>
+            CREATE TABLE notify.notification
+            (
+            notification_id          UNIQUEIDENTIFIER    NOT NULL,
+            reference                VARCHAR(256),
+            template_id              UNIQUEIDENTIFIER    NOT NULL,
+            template_version         SMALLINT,
+            template_uri             VARCHAR(256),
+            body                     NVARCHAR(MAX),
+            subject                  VARCHAR(256),
+            from_email               VARCHAR(256),
+            state                    VARCHAR(48)         NOT NULL DEFAULT 'pending',
+            created_at               DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at               DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT pk_notification_id PRIMARY KEY(notification_id),
+            CONSTRAINT fk_notification_status FOREIGN KEY (state) REFERENCES notify.notification_states (state)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification;
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-history-table" author="defra">
+        <comment>Create NOTIFICATION_HISTORY table</comment>
+        <sql>
+            CREATE TABLE notify.notification_history
+            (
+            notification_id           UNIQUEIDENTIFIER   NOT NULL,
+            notification_history_id   int                NOT NULL IDENTITY,
+            from_state                VARCHAR(48),
+            to_state                  VARCHAR(48)        NOT NULL,
+            created_at                DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_notification_history_from_state FOREIGN KEY (from_state) REFERENCES notify.notification_states (state),
+            CONSTRAINT fk_notification_history_to_state FOREIGN KEY (to_state) REFERENCES notify.notification_states (state),
+            CONSTRAINT fk_notification_history_id FOREIGN KEY (notification_id) REFERENCES notify.notification (notification_id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_history;
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-queue-table" author="defra">
+        <comment>Create NOTIFICATION_QUEUE table</comment>
+        <sql>
+            CREATE TABLE notify.notification_queue
+            (
+            notification_queue_id     INT                NOT NULL IDENTITY,
+            template_id               UNIQUEIDENTIFIER   NOT NULL,
+            event                     VARCHAR(64)        NOT NULL,
+            email                     VARCHAR(256)       NOT NULL,
+            created_at                DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT pk_notification_queue PRIMARY KEY(notification_queue_id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_queue;
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-queue-history-table" author="defra">
+        <comment>Create NOTIFICATION_QUEUE_HISTORY table</comment>
+        <sql>
+            CREATE TABLE notify.notification_queue_history
+            (
+            notification_queue_id     INT                NOT NULL,
+            from_state                VARCHAR(48) ,
+            to_state                  VARCHAR(48)        NOT NULL,
+            created_at                DATETIME           NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_notification_queue_history_from_state FOREIGN KEY (from_state) REFERENCES notify.notification_states (state),
+            CONSTRAINT fk_notification_queue_history_to_state FOREIGN KEY (to_state) REFERENCES notify.notification_states (state),
+            CONSTRAINT fk_notification_queue_history_id FOREIGN KEY (notification_queue_id) REFERENCES notify.notification_queue (notification_queue_id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_queue_history;
+        </rollback>
+    </changeSet>
+    <changeSet id="create-notification-queue-attributes-table" author="defra">
+        <comment>Create NOTIFICATION_QUEUE_ATTRIBUTES table</comment>
+        <sql>
+            CREATE TABLE notify.notification_queue_attributes
+            (
+            notification_queue_id     INT                NOT NULL,
+            place_holder              VARCHAR(256)       NOT NULL,
+            value                     VARCHAR(256),
+            CONSTRAINT pk_notification_queue_attributes PRIMARY KEY(notification_queue_id, place_holder),
+            CONSTRAINT fk_notification_queue_attributes FOREIGN KEY (notification_queue_id) REFERENCES notify.notification_queue (notification_queue_id)
+            )
+        </sql>
+        <rollback>
+            DROP TABLE notify.notification_queue_attributes;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

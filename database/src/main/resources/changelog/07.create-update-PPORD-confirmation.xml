@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="07.create-update-PPORD-confirmation.xml">
+
+    <changeSet id="create-update-PPORD-confirmation" author="defra">
+        <comment>Create UPDATE_PPORD_CONFIRMATION notification</comment>
+        <sql>
+            INSERT INTO notify.notification_template (event, template_id) VALUES ('UPDATE_PPORD_CONFIRMATION', 'e46ca66c-9ce8-4dba-9f1f-e6635c40ec5e');
+        </sql>
+        <rollback>
+            DELETE FROM notify.notification_template WHERE event = 'UPDATE_PPORD_CONFIRMATION' AND template_id = 'e46ca66c-9ce8-4dba-9f1f-e6635c40ec5e';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

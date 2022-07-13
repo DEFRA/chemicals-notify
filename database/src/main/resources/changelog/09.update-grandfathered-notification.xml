@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd"
+                   logicalFilePath="09.update-grandfathered-notification.xml">
+
+    <changeSet id="update-grandfathered-notification" author="defra">
+        <comment>Update GRANDFATHERED_NOTIFICATION notification</comment>
+        <sql>
+            UPDATE notify.notification_template SET template_id = '12203ddc-f0e0-4017-8520-4f0d4d4102a4' WHERE event = 'GRANDFATHERED_NOTIFICATION';
+        </sql>
+        <rollback>
+            UPDATE notify.notification_template SET template_id = 'f8621c3f-4e66-4d2b-8f0d-692703e22d41' WHERE event = 'GRANDFATHERED_NOTIFICATION';
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
